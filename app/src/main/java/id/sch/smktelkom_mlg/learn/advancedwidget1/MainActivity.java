@@ -16,15 +16,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LinearLayout llmain = (LinearLayout) findViewById(R.id.linearLayoutMain);
-        final EditText etNama = new EditText(this);
-        llmain.addView(etNama);
-        etNama.setHint("Isikan nama anak");
+        final LinearLayout llmain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 
-        final EditText etUmur = new EditText(this);
-        llmain.addView(etUmur);
-        etUmur.setHint("Isikan umur anak");
-        etUmur.setInputType(InputType.TYPE_CLASS_NUMBER);
+        addEditText(llmain);
 
         Button bProses = new Button(this);
         bProses.setText("Proses");
@@ -35,11 +29,40 @@ public class MainActivity extends AppCompatActivity {
         bProses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String nama = etNama.getText().toString();
-                String umur = etUmur.getText().toString();
-
-                tvHasil.setText(nama + " berumur " + umur + " tahun");
+                doProses(llmain);
             }
         });
+    }
+
+    private void addEditText(LinearLayout llmain) {
+        for (int i = 1; i <= 5; i++) {
+            EditText etNama = new EditText(this);
+            llmain.addView(etNama);
+            etNama.setHint("Isikan Nama Anak ke-" + i);
+
+            EditText etUmur = new EditText(this);
+            llmain.addView(etUmur);
+            etUmur.setHint("Isikan Umur Anak ke-" + i);
+            etUmur.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
+    }
+
+    private void doProses(LinearLayout llmain) {
+        String hasil = "";
+        for (int i = 0; i < 5; i++) {
+            EditText etNama = (EditText) llmain.getChildAt(i * 2);
+            EditText etUmur = (EditText) llmain.getChildAt((i * 2) + 1);
+
+            String nama = etNama.getText().toString().trim();
+            String umur = etUmur.getText().toString();
+
+            if (umur.isEmpty())
+                umur = "0";
+            if (!nama.isEmpty())
+                hasil += "Anak ke-" + (i + 1) + ": " + nama + " umur " + umur + " tahun\n";
+        }
+
+        TextView tvHasil = (TextView) llmain.getChildAt(11);
+        tvHasil.setText(hasil);
     }
 }
